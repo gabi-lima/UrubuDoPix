@@ -49,7 +49,7 @@ const TrabalharButton = ({ duracao, dinheiro, onMoneyChange }) => {
       >
         {working ? "Trabalhando..." : "Trabalhar"}
       </button>
-      <progress value={progress} max="100"></progress>
+      <progress className="w-[80%] mx-10" value={progress} max="100"></progress>
     </>
   );
 };
