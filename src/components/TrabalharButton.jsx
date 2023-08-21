@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-const TrabalharButton = ({ duracao }) => {
+const TrabalharButton = ({ duracao, dinheiro, onMoneyChange }) => {
   const [progress, setProgress] = useState(0);
   const [working, setWorking] = useState(false);
 
@@ -14,7 +14,6 @@ const TrabalharButton = ({ duracao }) => {
     if (!working) {
       setWorking(true);
       let startTime = Date.now();
-
       const interval = setInterval(() => {
         const currentTime = Date.now();
         const elapsedTime = currentTime - startTime;
@@ -31,6 +30,9 @@ const TrabalharButton = ({ duracao }) => {
 
       setTimeout(() => {
         clearInterval(interval);
+        onMoneyChange(dinheiro);
+        console.log("Earning dinheiro:", dinheiro);
+
         setWorking(false);
         setProgress(0);
       }, duracao);

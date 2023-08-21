@@ -7,28 +7,14 @@ import urubu from "./assets/urubu1.png";
 function App() {
   const [progress, setProgress] = useState(0);
   const [working, setWorking] = useState(false);
+  const [activeTab, setActiveTab] = useState("trabalhar"); // Estado para controlar a aba ativa
+  const [money, setMoney] = useState(50.0);
 
-  const handleWorkClick = () => {
-    setWorking(true);
-    setProgress(0);
-
-    const interval = setInterval(() => {
-      setProgress((prevProgress) => {
-        if (prevProgress < 100) {
-          return prevProgress + 1;
-        } else {
-          clearInterval(interval);
-          setWorking(false);
-          return 0;
-        }
-      });
-    }, 50); // Atualiza a cada 50ms
-
-    setTimeout(() => {
-      clearInterval(interval);
-      setWorking(false);
-      setProgress(0);
-    }, 5000); // Para depois de 5 segundos
+  const handleTabClick = (tab) => {
+    setActiveTab(tab);
+  };
+  const handleMoneyChange = (amount) => {
+    setMoney((prevMoney) => prevMoney + amount);
   };
 
   return (
@@ -41,21 +27,52 @@ function App() {
             alt="Urubuzao"
           />
           <h1 className="mt-20"> Urubu do Pix</h1>
+          <h2 className="text-green-500"> ${money}</h2>
         </div>
         <div className="w-[80%] h-[50%] bg-[#0f1c2d] mt-10 shadow-[5px_5px_50px_3px] rounded-md flex flex-col items-center">
           <div className=" bg-[#3a668b] w-full flex flex-row justify-between  rounded-md">
-            <h2 className=" h-8  w-[100%] text-center border border-black hover:bg-[#4380b0] transition-all cursor-pointer active:p-2">
+            <h2
+              className={`h-8 w-[50%] text-center border border-black hover:bg-[#4380b0] transition-all cursor-pointer ${
+                activeTab === "trabalhar" ? "bg-[#4380b0]" : ""
+              } active:p-2`}
+              onClick={() => handleTabClick("trabalhar")}
+            >
               Trabalhar
             </h2>
-            <h2 className=" h-8 w-[100%] text-center border border-black hover:bg-[#4380b0] transition-all cursor-pointer active:p-2">
+            <h2
+              className={`h-8 w-[50%] text-center border border-black hover:bg-[#4380b0] transition-all cursor-pointer ${
+                activeTab === "comprar" ? "bg-[#4380b0]" : ""
+              } active:p-2`}
+              onClick={() => handleTabClick("comprar")}
+            >
               Comprar
             </h2>
           </div>
           {/* Aba Trabalhar */}
-
-          <TrabalharCard title="Bater uma Laje" tempoBotao={10000} />
-          <TrabalharCard title="Bater Carteira" tempoBotao={10} />
-          <TrabalharCard title="Bater uma Laje" tempoBotao={1000} />
+          {activeTab === "trabalhar" ? (
+            <>
+              <TrabalharCard
+                title="Bater uma Laje"
+                tempoBotao={100}
+                dinheiroBotao={10}
+                onMoneyChange={handleMoneyChange}
+              />
+              <TrabalharCard
+                title="Bater Carteira"
+                tempoBotao={100}
+                dinheiroBotao={5}
+                onMoneyChange={handleMoneyChange}
+              />
+              <TrabalharCard
+                title="Bater uma Laje"
+                tempoBotao={100}
+                dinheiroBotao={25}
+                onMoneyChange={handleMoneyChange}
+              />
+            </>
+          ) : (
+            <h1> Teste </h1>
+          )}
         </div>
       </div>
     </>
