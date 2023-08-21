@@ -1,10 +1,20 @@
 import { useState } from "react";
 import TrabalharCard from "./components/TrabalharCard";
 import ComprarCard from "./components/ComprarCard";
-import { Random } from "random-js"; // Importando a biblioteca random-js
+import { randomExponential } from "d3-random"; // Importar função específica
 
 import "./index.css";
 import urubu from "./assets/urubu1.png";
+
+const exponentialRandom = randomExponential(1); // Configurar distribuição exponencial
+
+const getSkewedRandom = (min, max) => {
+  let randomNumber;
+  do {
+    randomNumber = exponentialRandom();
+  } while (randomNumber > 1); // Limitar para o intervalo [0, 1]
+  return Math.floor(min + (max - min) * randomNumber);
+};
 
 function App() {
   const [activeTab, setActiveTab] = useState("trabalhar"); // Estado para controlar a aba ativa
@@ -36,6 +46,10 @@ function App() {
 
   const golpesDinheiro = pegarNumeroAleatorio(0, 99999, 2);
   console.log(golpesDinheiro);
+
+  function handleCustomAlert() {
+    alert("Você pode perder dinheiro...");
+  }
 
   return (
     <>
@@ -89,8 +103,9 @@ function App() {
                 title="Dar Golpes"
                 money={"0 - $99999"}
                 tempoBotao={100}
-                dinheiroBotao={Math.floor(getTriangularRandom(0, 99999))}
+                dinheiroBotao={getSkewedRandom(-60000, 99999)}
                 onMoneyChange={handleMoneyChange}
+                onAlertClick={handleCustomAlert}
               />
               <TrabalharCard
                 title="Por galo para brigar"
