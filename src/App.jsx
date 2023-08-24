@@ -120,7 +120,7 @@ function App() {
               )}
               {itensComprados["Moto G2 com a tela trincada"] && (
                 <TrabalharCard
-                  title="Dar Golpes"
+                  title="Dar Golpe do Pix"
                   money={"-10k~$10k"}
                   tempoBotao={15000}
                   dinheiroBotao={getSkewedRandom(-3000, 10000)}
