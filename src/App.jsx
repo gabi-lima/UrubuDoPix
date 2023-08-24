@@ -109,7 +109,7 @@ function App() {
                 />
               )}
 
-              {itensComprados["Galo de Rinha"] && (
+              {itensComprados["Galo Indio para Rinhas"] && (
                 <TrabalharCard
                   title="Por galo para brigar"
                   money={"-$2k~$2k"}
