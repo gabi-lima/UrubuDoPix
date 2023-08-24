@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import TrabalharCard from "./components/TrabalharCard";
 import ComprarCard from "./components/ComprarCard";
 import { randomExponential } from "d3-random"; // Importar função específica
@@ -18,7 +18,7 @@ const getSkewedRandom = (min, max) => {
 
 function App() {
   const [activeTab, setActiveTab] = useState("trabalhar"); // Estado para controlar a aba ativa
-  const [money, setMoney] = useState(0.0);
+  const [money, setMoney] = useState("");
 
   const handleTabClick = (tab) => {
     setActiveTab(tab);
@@ -27,12 +27,6 @@ function App() {
     setMoney((prevMoney) => prevMoney + amount);
   };
 
-  function getTriangularRandom(min, max) {
-    const baseRandom = Math.random();
-    const triangularRandom = Math.sqrt(baseRandom);
-    return min + (max - min) * triangularRandom;
-  }
-
   function pegarNumeroAleatorio(min, max, fatorProbabilidade) {
     const probabilidade = Math.random() ** fatorProbabilidade;
 
@@ -40,6 +34,19 @@ function App() {
 
     return Math.floor(valorFinal);
   }
+
+  useEffect(() => {
+    // Load money value from localStorage on component mount
+    const savedMoney = localStorage.getItem("money");
+    if (savedMoney) {
+      setMoney(parseFloat(savedMoney));
+    }
+  }, []);
+
+  useEffect(() => {
+    // Save money value to localStorage whenever it changes
+    localStorage.setItem("money", money);
+  }, [money]);
 
   const baterCarteiraDinheiro = pegarNumeroAleatorio(10, 300, 10);
   console.log(baterCarteiraDinheiro);
