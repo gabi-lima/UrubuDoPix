@@ -15,8 +15,14 @@ const TrabalharCard = ({
   };
   return (
     <div className="w-80% flex flex-wrap justify-between items-center mt-4 bg-white w-[90%] h-[90px] rounded-md">
-      <h2 className="ml-2"> {title} </h2>
-      <h2 className="text-green-500"> ${money}</h2>
+      <div className="w-[100px]">
+        <h2 className="ml-2"> {title} </h2>
+        <h2 className="text-green-500 mr-12 text-2xl font-bold ml-10">
+          {" "}
+          {money}
+        </h2>
+      </div>
+
       <TrabalharButton
         onClick={handleButtonClick}
         duracao={tempoBotao}

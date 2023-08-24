@@ -6,7 +6,7 @@ import { randomExponential } from "d3-random"; // Importar função específica
 import "./index.css";
 import urubu from "./assets/urubu1.png";
 
-const exponentialRandom = randomExponential(1); // Configurar distribuição exponencial
+const exponentialRandom = randomExponential(2); // Configurar distribuição exponencial
 
 const getSkewedRandom = (min, max) => {
   let randomNumber;
@@ -19,21 +19,23 @@ const getSkewedRandom = (min, max) => {
 function App() {
   const [activeTab, setActiveTab] = useState("trabalhar"); // Estado para controlar a aba ativa
   const [money, setMoney] = useState("");
+  const [itensComprados, setItensComprados] = useState({});
 
   const handleTabClick = (tab) => {
     setActiveTab(tab);
   };
   const handleMoneyChange = (amount) => {
-    setMoney((prevMoney) => prevMoney + amount);
+    setMoney((prevMoney) => parseFloat(prevMoney + amount));
   };
 
-  function pegarNumeroAleatorio(min, max, fatorProbabilidade) {
-    const probabilidade = Math.random() ** fatorProbabilidade;
-
-    const valorFinal = min + probabilidade * (max - min);
-
-    return Math.floor(valorFinal);
-  }
+  const handleMoneyBuy = (newMoney) => {
+    setMoney(newMoney);
+  };
+  const handleItemBoughtChange = (itemTitle) => {
+    setItensComprados((prevItems) => {
+      return { ...prevItems, [itemTitle]: true };
+    });
+  };
 
   useEffect(() => {
     // Load money value from localStorage on component mount
@@ -48,15 +50,13 @@ function App() {
     localStorage.setItem("money", money);
   }, [money]);
 
-  const baterCarteiraDinheiro = pegarNumeroAleatorio(10, 300, 10);
-  console.log(baterCarteiraDinheiro);
-
-  const golpesDinheiro = pegarNumeroAleatorio(0, 99999, 2);
-  console.log(golpesDinheiro);
-
-  function handleCustomAlert() {
-    alert("Você pode perder dinheiro...");
-  }
+  useEffect(() => {
+    // Load itensComprados value from localStorage on component mount
+    const savedItems = localStorage.getItem("itensComprados");
+    if (savedItems) {
+      setItensComprados(JSON.parse(savedItems));
+    }
+  }, []);
 
   return (
     <>
@@ -94,38 +94,66 @@ function App() {
             <>
               <TrabalharCard
                 title="Bater uma Laje"
-                money={50}
-                tempoBotao={1000}
+                money={"$50"}
+                tempoBotao={6000}
                 dinheiroBotao={50}
                 onMoneyChange={handleMoneyChange}
               />
-              <TrabalharCard
-                title="Bater Carteira"
-                money={"10 - $100"}
-                tempoBotao={100}
-                dinheiroBotao={baterCarteiraDinheiro}
-                onMoneyChange={handleMoneyChange}
-              />
-              <TrabalharCard
-                title="Dar Golpes"
-                money={"0 - $99999"}
-                tempoBotao={100}
-                dinheiroBotao={getSkewedRandom(-60000, 99999)}
-                onMoneyChange={handleMoneyChange}
-                onAlertClick={handleCustomAlert}
-              />
-              <TrabalharCard
-                title="Por galo para brigar"
-                tempoBotao={4300}
-                dinheiroBotao={25}
-                onMoneyChange={handleMoneyChange}
-              />
+              {itensComprados["bmx muito boa para freestyle"] && (
+                <TrabalharCard
+                  title="Bater Carteira"
+                  money={"$10~$100"}
+                  tempoBotao={3500}
+                  dinheiroBotao={getSkewedRandom(0, 100)}
+                  onMoneyChange={handleMoneyChange}
+                />
+              )}
+
+              {itensComprados["Galo de Rinha"] && (
+                <TrabalharCard
+                  title="Por galo para brigar"
+                  money={"-$2k~$2k"}
+                  tempoBotao={7500}
+                  dinheiroBotao={getSkewedRandom(-2000, 2000)}
+                  onMoneyChange={handleMoneyChange}
+                />
+              )}
+              {itensComprados["Moto G2 com a tela trincada"] && (
+                <TrabalharCard
+                  title="Dar Golpes"
+                  money={"-10k~$10k"}
+                  tempoBotao={15000}
+                  dinheiroBotao={getSkewedRandom(-3000, 10000)}
+                  onMoneyChange={handleMoneyChange}
+                />
+              )}
             </>
           ) : (
             <>
-              <ComprarCard title="bmx muito boa para freestyle" valor={1200} />
-              <ComprarCard title="Moto G2 com a tela trincada" valor={6300} />
-              <ComprarCard title="Galo de Rinha" />
+              <ComprarCard
+                title="bmx muito boa para freestyle"
+                valor={350}
+                money={money}
+                onMoneyChange={handleMoneyBuy}
+                onItemBoughtChange={handleItemBoughtChange}
+                itensComprados={itensComprados}
+              />
+              <ComprarCard
+                title="Galo Indio para Rinhas"
+                valor={1500}
+                money={money}
+                onMoneyChange={handleMoneyBuy}
+                onItemBoughtChange={handleItemBoughtChange}
+                itensComprados={itensComprados}
+              />
+              <ComprarCard
+                title="Moto G2 com a tela trincada"
+                valor={4300}
+                money={money}
+                onMoneyChange={handleMoneyBuy}
+                onItemBoughtChange={handleItemBoughtChange}
+                itensComprados={itensComprados}
+              />
             </>
           )}
         </div>
